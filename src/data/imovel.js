@@ -174,6 +174,24 @@ export const imovel = {
     fotoJpg: fotoCorretorJpg,
   },
 
+  // ---- PLANTÃO DO CORRETOR (aviso temporário) ----
+  // Faixa de destaque no topo avisando que o corretor está na cidade
+  // e pode mostrar o imóvel pessoalmente.
+  //
+  // IMPORTANTE: o aviso SOME SOZINHO depois da data em "ate" — assim
+  // o site nunca mostra uma informação vencida. Para usar de novo,
+  // basta atualizar as datas.
+  plantao: {
+    ativo: true,
+    ate: '2026-08-16', // último dia do plantão (formato AAAA-MM-DD)
+    titulo: 'Corretor em plantão em Bananeiras até domingo',
+    texto:
+      'Rômulo está na cidade e pode mostrar o apartamento pessoalmente. Agende seu horário.',
+    // Mensagem específica deste aviso (ajuda a identificar de onde veio o contato)
+    mensagem:
+      'Olá! Vi que o corretor está em plantão em Bananeiras. Posso agendar uma visita ao apartamento?',
+  },
+
   // ---- WHATSAPP ----
   whatsapp: {
     // Somente números, com DDI 55 + DDD + número
@@ -189,7 +207,25 @@ export const imovel = {
   faq: [],
 }
 
-/** Monta o link do WhatsApp com a mensagem pré-preenchida */
-export function linkWhatsApp() {
-  return `https://wa.me/${imovel.whatsapp.numero}?text=${encodeURIComponent(imovel.whatsapp.mensagem)}`
+/**
+ * Monta o link do WhatsApp com a mensagem pré-preenchida.
+ * @param {string} [mensagem] - mensagem alternativa (ex.: a do plantão)
+ */
+export function linkWhatsApp(mensagem) {
+  const texto = mensagem || imovel.whatsapp.mensagem
+  return `https://wa.me/${imovel.whatsapp.numero}?text=${encodeURIComponent(texto)}`
+}
+
+/**
+ * O plantão do corretor ainda está valendo?
+ * Compara só a DATA (sem horas), então o aviso fica no ar até o
+ * fim do último dia e some sozinho no dia seguinte.
+ */
+export function plantaoAtivo() {
+  const { plantao } = imovel
+  if (!plantao?.ativo || !plantao.ate) return false
+
+  const [ano, mes, dia] = plantao.ate.split('-').map(Number)
+  const fim = new Date(ano, mes - 1, dia, 23, 59, 59) // fim do último dia, horário local
+  return new Date() <= fim
 }

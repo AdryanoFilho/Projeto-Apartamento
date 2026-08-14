@@ -1,3 +1,4 @@
+import AvisoPlantao from './components/AvisoPlantao.jsx'
 import Galeria from './components/Galeria.jsx'
 import Reveal from './components/Reveal.jsx'
 import { BotaoWhatsAppFlutuante } from './components/BotaoWhatsApp.jsx'
@@ -30,6 +31,10 @@ export default function App() {
     <div className="animate-fade-up">
       {/* Barra superior com a marca do imóvel */}
       <BarraSuperior />
+
+      {/* Aviso de plantão do corretor — some sozinho após a data
+          configurada em src/data/imovel.js (plantao.ate) */}
+      <AvisoPlantao />
 
       {/* 1 e 2. Galeria de fotos + abas Fotos/Mapa */}
       <Galeria />
