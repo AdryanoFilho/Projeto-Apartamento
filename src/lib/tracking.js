@@ -62,7 +62,12 @@ export function initTracking() {
  * @param {string} origem - onde o botão foi clicado (ex: 'box-preco', 'flutuante')
  */
 export function trackWhatsAppClick(origem) {
-  // Meta Pixel — evento padrão de contato
+  // Fora do navegador (ex.: renderização no servidor) não há o que enviar
+  if (typeof window === 'undefined') return
+
+  // Meta Pixel — evento padrão de contato.
+  // O "if" protege caso o script do Pixel ainda não tenha carregado
+  // (ou tenha sido bloqueado por um bloqueador de anúncios).
   if (window.fbq) {
     window.fbq('track', 'Contact', { content_name: 'whatsapp', origem })
   }
